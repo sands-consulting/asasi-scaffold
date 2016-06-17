@@ -1,10 +1,10 @@
 <?php
 
-namespace Sands\Scaffold;
+namespace Sands\Scaffold\Maker;
 
 use Illuminate\Console\Command;
 
-class ScaffoldCommand extends Command
+class MakerCommand extends Command
 {
     /**
      * The name and signature of the console command.

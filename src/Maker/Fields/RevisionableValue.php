@@ -1,13 +1,13 @@
 <?php
 
-namespace Sands\Scaffold\Fields;
+namespace Sands\Scaffold\Maker\Fields;
 
-class Validation
+class RevisionableValue
 {
     public function make($fields, $modelParams)
     {
         return implode("\n", array_map(function($params) use ($modelParams) {
-            return "            '{$params[0]}' => 'required',";
+            return "            '{$params[1]}'  => 'string:%s',";
         }, $fields));
     }
 }

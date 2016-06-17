@@ -1,6 +1,6 @@
 <?php
 
-namespace Sands\Scaffold\Fields;
+namespace Sands\Scaffold\Maker\Fields;
 
 class Migration
 {
