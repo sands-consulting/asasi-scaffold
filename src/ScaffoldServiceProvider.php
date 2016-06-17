@@ -14,7 +14,9 @@ class ScaffoldServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishes([
+            __DIR__.'Scaffold/templates/' => config_path('sands/scaffold/templates')
+        ], 'templates');
     }
 
     /**
@@ -28,58 +30,63 @@ class ScaffoldServiceProvider extends ServiceProvider
             return new Scaffold;
         });
         app()->bind('scaffold.form', function(){
-            return new Fields\Form();
+            return new Maker\Fields\Form();
         });
         app()->bind('scaffold.show', function(){
-            return new Fields\Show();
+            return new Maker\Fields\Show();
         });
         app()->bind('scaffold.lang', function(){
-            return new Fields\Lang();
+            return new Maker\Fields\Lang();
         });
         app()->bind('scaffold.index', function(){
-            return new Fields\Index();
+            return new Maker\Fields\Index();
         });
         app()->bind('scaffold.migration', function(){
-            return new Fields\Migration();
+            return new Maker\Fields\Migration();
         });
         app()->bind('scaffold.fillable', function(){
-            return new Fields\Fillable();
+            return new Maker\Fields\Fillable();
         });
         app()->bind('scaffold.migrationfkup', function(){
-            return new Fields\MigrationFkUp();
+            return new Maker\Fields\MigrationFkUp();
         });
         app()->bind('scaffold.migrationfkdown', function(){
-            return new Fields\MigrationFkDown();
+            return new Maker\Fields\MigrationFkDown();
         });
         app()->bind('scaffold.modelfkmethods', function(){
-            return new Fields\ModelFkMethods();
+            return new Maker\Fields\ModelFkMethods();
         });
         app()->bind('scaffold.validation', function(){
-            return new Fields\Validation();
+            return new Maker\Fields\Validation();
         });
         app()->bind('scaffold.migrationmanytomanyup', function(){
-            return new Fields\MigratonManyToManyUp();
+            return new Maker\Fields\MigratonManyToManyUp();
         });
         app()->bind('scaffold.migrationmanytomanydown', function(){
-            return new Fields\MigratonManyToManyDown();
+            return new Maker\Fields\MigratonManyToManyDown();
         });
         app()->bind('scaffold.revisionablename', function(){
-            return new Fields\RevisionableName();
+            return new Maker\Fields\RevisionableName();
         });
         app()->bind('scaffold.revisionablevalue', function(){
-            return new Fields\RevisionableValue();
+            return new Maker\Fields\RevisionableValue();
         });
-
+        app()->bind('fkmigrator', function(){
+            return new FKMigrator\FKMigrator();
+        });
         $this->registerCommand();
     }
 
     public function registerCommand()
     {
         app()->singleton('scaffoldcmd', function(){
-            return new ScaffoldCommand;
+            return new Maker\MakerCommand;
         });
-
         $this->commands('scaffoldcmd');
-    }
 
+        app()->singleton('scaffoldremovercmd', function(){
+            return new Remover\RemoverCommand;
+        });
+        $this->commands('scaffoldremovercmd');
+    }
 }

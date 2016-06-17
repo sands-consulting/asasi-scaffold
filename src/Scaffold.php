@@ -2,7 +2,7 @@
 
 namespace Sands\Scaffold;
 
-use Illuminate\Foundation\Composer;
+use Illuminate\Support\Composer;
 use DiffMatchPatch\DiffMatchPatch;
 use Illuminate\Support\Str;
 
@@ -15,6 +15,7 @@ class Scaffold
     protected $patcher;
     protected $fields;
     protected $fs;
+    protected $publishedTemplatePath;
 
     protected function substitute($source)
     {
@@ -64,31 +65,31 @@ class Scaffold
             $templatePrefix = 'nesting';
         }
         $templates = [
-            "{$templatePrefix}/views/create.php"    => base_path("resources/views/{$this->params['model-names']}/create.blade.php"),
-            "{$templatePrefix}/views/edit.php"      => base_path("resources/views/{$this->params['model-names']}/edit.blade.php"),
-            "{$templatePrefix}/views/form.php"      => base_path("resources/views/{$this->params['model-names']}/form.blade.php"),
-            "{$templatePrefix}/views/index.php"     => base_path("resources/views/{$this->params['model-names']}/index.blade.php"),
-            "{$templatePrefix}/views/revisions.php" => base_path("resources/views/{$this->params['model-names']}/revisions.blade.php"),
-            "{$templatePrefix}/views/show.php"      => base_path("resources/views/{$this->params['model-names']}/show.blade.php"),
-            "{$templatePrefix}/controller.php"      => base_path("app/Http/Controllers/{$this->params['ModelNames']}Controller.php"),
-            "{$templatePrefix}/menus.php"           => base_path("app/Menus/{$this->params['ModelNames']}Menu.php"),
-            "{$templatePrefix}/model.php"           => base_path("app/{$this->params['ModelName']}.php"),
-            "{$templatePrefix}/policy.php"          => base_path("app/Policies/{$this->params['ModelNames']}Policy.php"),
-            "{$templatePrefix}/provider.php"        => base_path("app/Providers/Modules/{$this->params['ModelNames']}Provider.php"),
-            'repository.php'                        => base_path("app/Repositories/{$this->params['ModelNames']}Repository.php"),
-            'validation.php'                        => base_path("app/Validators/{$this->params['ModelNames']}Validators.php"),
-            'seeds.php'                             => base_path("database/seeds/{$this->params['ModelNames']}Seeder.php"),
-            'migrations.php'                        => base_path("database/migrations/{$timestamp}_{$this->params['ModelNames']}Migration.php"),
+            "{$templatePrefix}/views/create.tpl"    => base_path("resources/views/{$this->params['model-names']}/create.blade.php"),
+            "{$templatePrefix}/views/edit.tpl"      => base_path("resources/views/{$this->params['model-names']}/edit.blade.php"),
+            "{$templatePrefix}/views/form.tpl"      => base_path("resources/views/{$this->params['model-names']}/form.blade.php"),
+            "{$templatePrefix}/views/index.tpl"     => base_path("resources/views/{$this->params['model-names']}/index.blade.php"),
+            "{$templatePrefix}/views/revisions.tpl" => base_path("resources/views/{$this->params['model-names']}/revisions.blade.php"),
+            "{$templatePrefix}/views/show.tpl"      => base_path("resources/views/{$this->params['model-names']}/show.blade.php"),
+            "{$templatePrefix}/controller.tpl"      => base_path("app/Http/Controllers/{$this->params['ModelNames']}Controller.php"),
+            "{$templatePrefix}/menus.tpl"           => base_path("app/Menus/{$this->params['ModelNames']}Menu.php"),
+            "{$templatePrefix}/model.tpl"           => base_path("app/{$this->params['ModelName']}.php"),
+            "{$templatePrefix}/policy.tpl"          => base_path("app/Policies/{$this->params['ModelNames']}Policy.php"),
+            "{$templatePrefix}/provider.tpl"        => base_path("app/Providers/Modules/{$this->params['ModelNames']}Provider.php"),
+            'repository.tpl'                        => base_path("app/Repositories/{$this->params['ModelNames']}Repository.php"),
+            'validation.tpl'                        => base_path("app/Validators/{$this->params['ModelNames']}Validators.php"),
+            'seeds.tpl'                             => base_path("database/seeds/{$this->params['ModelNames']}Seeder.php"),
+            'migrations.tpl'                        => base_path("database/migrations/{$timestamp}_{$this->params['ModelNames']}Migration.php"),
         ];
-        foreach ($this->fs->files(app_path('Libraries/Generator/stubs/langs')) as $value) {
+        foreach ($this->fs->files($this->getTemplate('langs')) as $value) {
             $value = 'langs/' . basename($value);
             $lang = substr($value, 6, -4);
             $templates[$value] = base_path("resources/lang/{$lang}/{$this->params['model-names']}.php");
         }
         if($this->isJuctionTable)
-            $templates = ['migrations-junction-table.php' => $templates['migrations.php']];
+            $templates = ['migrations-junction-table.tpl' => $templates['migrations.tpl']];
         foreach ($templates as $source => $destination) {
-            $content = $this->substitute(file_get_contents(base_path('app/Libraries/Generator/stubs/') . $source));
+            $content = $this->substitute(file_get_contents($this->getTemplate($source)));
             if(!is_dir($basePath = dirname($destination))) {
                 $this->fs->makeDirectory($basePath, 0755, true);
             }
@@ -139,7 +140,7 @@ class Scaffold
             base_path("database/seeds/_{$this->params['ModelNames']}Seeder.php"),
             base_path("app/Validators/_{$this->params['ModelNames']}Validators.php"),
         ];
-        foreach ($this->fs->files(app_path('Libraries/Generator/stubs/langs')) as $value) {
+        foreach ($this->fs->files($this->getTemplate('langs')) as $value) {
             $value = basename($value);
             $lang = substr($value, 0, -4);
             $templates[] = base_path("resources/lang/{$lang}/{$this->params['model-names']}.php");
@@ -161,16 +162,16 @@ class Scaffold
     protected function makeFieldsParams()
     {
         $this->params = $this->params + [
-            'FORMFIELDS' => app('laravel-base-generator.form')->make($this->fields, $this->params, $this->relationships),
-            'SHOWFIELDS' => app('laravel-base-generator.show')->make($this->fields, $this->params, $this->relationships),
-            'REVISIONABLENAME' => app('laravel-base-generator.revisionablename')->make($this->fields, $this->params, $this->relationships),
-            'REVISIONABLEVALUE' => app('laravel-base-generator.revisionablevalue')->make($this->fields, $this->params, $this->relationships),
-            'LANGENFIELDS' => app('laravel-base-generator.lang')->make($this->fields, $this->params, $this->relationships),
-            'INDEXCOLUMNS' => app('laravel-base-generator.index')->make($this->fields, $this->params, $this->relationships),
-            'MIGRATIONFIELDS' => app('laravel-base-generator.migration')->make($this->fields, $this->params, $this->relationships),
-            'FILLABLECOLUMN' => app('laravel-base-generator.fillable')->make($this->fields, $this->params, $this->relationships),
-            'FKMODELMETHODS' => app('laravel-base-generator.modelfkmethods')->make($this->fields, $this->params, $this->relationships),
-            'VALIDATIONS' => app('laravel-base-generator.validation')->make($this->fields, $this->params, $this->relationships),
+            'FORMFIELDS' => app('scaffold.form')->make($this->fields, $this->params, $this->relationships),
+            'SHOWFIELDS' => app('scaffold.show')->make($this->fields, $this->params, $this->relationships),
+            'REVISIONABLENAME' => app('scaffold.revisionablename')->make($this->fields, $this->params, $this->relationships),
+            'REVISIONABLEVALUE' => app('scaffold.revisionablevalue')->make($this->fields, $this->params, $this->relationships),
+            'LANGENFIELDS' => app('scaffold.lang')->make($this->fields, $this->params, $this->relationships),
+            'INDEXCOLUMNS' => app('scaffold.index')->make($this->fields, $this->params, $this->relationships),
+            'MIGRATIONFIELDS' => app('scaffold.migration')->make($this->fields, $this->params, $this->relationships),
+            'FILLABLECOLUMN' => app('scaffold.fillable')->make($this->fields, $this->params, $this->relationships),
+            'FKMODELMETHODS' => app('scaffold.modelfkmethods')->make($this->fields, $this->params, $this->relationships),
+            'VALIDATIONS' => app('scaffold.validation')->make($this->fields, $this->params, $this->relationships),
         ];
     }
 
@@ -227,5 +228,23 @@ class Scaffold
         $this->remove();
         $this->dumpAutoload();
 
+    }
+
+    public function getTemplate($file)
+    {
+        if ($this->fs->exists($this->publishedTemplatePath . DIRECTORY_SEPARATOR . $file))
+            return $this->publishedTemplatePath . DIRECTORY_SEPARATOR . $file;
+        else
+            return __DIR__.'/Maker/templates/' . $file;
+    }
+
+    public function setPublishedTemplatePath()
+    {
+        $this->publishedTemplatePath = config_path('sands' . DIRECTORY_SEPARATOR . 'scaffold' . DIRECTORY_SEPARATOR . 'templates');
+    }
+
+    public function __construct()
+    {
+        $this->setPublishedTemplatePath();
     }
 }
