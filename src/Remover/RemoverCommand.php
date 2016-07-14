@@ -1,6 +1,6 @@
 <?php
 
-namespace Sands\Scaffold\Remover;
+namespace Sands\Asasi\Scaffold\Remover;
 
 use Illuminate\Console\Command;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sands\Scaffold\FKMigrator;
+namespace Sands\Asasi\Scaffold\FKMigrator;
 
 use Schema;
 use DB;

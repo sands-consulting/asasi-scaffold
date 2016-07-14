@@ -1,6 +1,6 @@
 <?php
 
-namespace Sands\Scaffold;
+namespace Sands\Asasi\Scaffold;
 
 use Illuminate\Support\Composer;
 use DiffMatchPatch\DiffMatchPatch;

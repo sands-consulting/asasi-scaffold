@@ -1,6 +1,6 @@
 <?php
 
-namespace Sands\Scaffold\Maker\Fields;
+namespace Sands\Asasi\Scaffold\Maker\Fields;
 
 class Lang
 {

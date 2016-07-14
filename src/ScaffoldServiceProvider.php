@@ -1,9 +1,9 @@
 <?php
 
-namespace Sands\Scaffold;
+namespace Sands\Asasi\Scaffold;
 
 use Illuminate\Support\ServiceProvider;
-use Sands\Scaffold\Fields\Form;
+use Sands\Asasi\Scaffold\Fields\Form;
 
 class ScaffoldServiceProvider extends ServiceProvider
 {

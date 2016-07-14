@@ -1,6 +1,6 @@
 <?php
 
-namespace Sands\Scaffold\Maker;
+namespace Sands\Asasi\Scaffold\Maker;
 
 use Illuminate\Console\Command;
 
