@@ -5,7 +5,7 @@
 Install using composer
 
 ```
-composer require sands\scaffold
+composer require sands\asasi-scaffold
 ```
 
 Publish Templates
