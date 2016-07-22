@@ -15,7 +15,7 @@ class ScaffoldServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'Scaffold/templates/' => config_path('sands/scaffold/templates')
+            __DIR__.'Scaffold/templates/' => config_path('sands/asasi/scaffold/templates')
         ], 'templates');
     }
 
