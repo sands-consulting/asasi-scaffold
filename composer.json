@@ -3,14 +3,26 @@
     "description": "Scaffold Generator",
     "type": "library",
     "license": "MIT",
-    "minimum-stability": "stable",
+    "authors": [
+         {
+            "name": "Zulfa Juniadi",
+            "email": "zulfajuniadi@gmail.com",
+            "homepage": "https://github.com/zulfajuniadi"
+        },
+        {
+            "name": "Amin Adha",
+            "email": "aminadha@gmail.com",
+            "homepage": "https://github.com/aminadha"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sands\\Asasi\\Scaffold\\": "src/"
+        }
+    },
     "require": {
         "php": ">=5.5.9",
         "illuminate/support": "~5.0"
     },
-    "autoload": {
-        "psr-4": {
-            "Sands\\Scaffold\\": "src/"
-        }
-    }
+    "minimum-stability": "dev"
 }
