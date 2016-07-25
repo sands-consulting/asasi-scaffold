@@ -8,108 +8,61 @@ use App\Http\Requests;
 use App\Repositories\ModelNamesRepository;
 use App\Http\Controllers\Controller;
 use yajra\Datatables\Html\Builder;
+use App\DataTables\ModelNamesDataTable;
 use App\ModelName;
 
 class ModelNamesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Builder $htmlBuilder)
+    public function __construct()
     {
-        $DataTable = $htmlBuilder
-INDEXCOLUMNS
-            ->ajax(action('ModelNamesController@data'));
-        return view()->make('model-names.index', compact('DataTable'));
+        $this->middleware('policy');
     }
 
-    /**
-     * Data listing of the resource for DataTables.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function data()
+    public function index(ModelNamesDataTable $table)
     {
-        return app('datatables')
-            ->of(ModelName::whereNotNull('name'))
-            ->editColumn('name', function($modelName){
-                if(app('policy')->check('App\Http\Controllers\ModelNamesController', 'show', [$modelName])) {
-                    return link_to_action('ModelNamesController@show', $modelName->name, $modelName->getSlug());
-                }
-                return $modelName->name;
-            })
-            ->make(true);
+        return $table->render('model-names.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        return view()->make('model-names.create');
+        return view('model-names.create', ['modelName' => new ModelName]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(ModelNameRequest $request)
     {
-        $modelName = ModelNamesRepository::create(new ModelName, $request->all());
+        $inputs             = $request->all();
+        $modelName          = ModelNamesRepository::create(new ModelName, $inputs);
+
         return redirect()
-            ->action('ModelNamesController@index')
-            ->with('success', trans('model-names.created', ['name' => $modelName->name]));
+            ->route('model-names.show', $modelName->id)
+            ->with('notice', trans('model-names.notices.created', ['name' => $modelName->name]));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
     public function show(ModelName $modelName)
     {
-        return view()->make('model-names.show', compact('modelName'));
+        return view('model-names.show', compact('modelName'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
     public function edit(ModelName $modelName)
     {
-        return view()->make('model-names.edit', compact('modelName'));
+        return view('model-names.edit', compact('modelName'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ModelName $modelName)
+    public function update(ModelNameRequest $request, ModelName $modelName)
     {
-        $modelName = ModelNamesRepository::update($modelName, $request->all());
+        $inputs = $request->all();
+
+        $modelName = ModelNamesRepository::update($modelName, $inputs);
+
+        if ($roles = $request->get('roles', [])) {
+            $modelName->roles()->sync($roles);
+        }
+
         return redirect()
-            ->action('ModelNamesController@edit', ['model_names' => $modelName->getSlug()])
-            ->with('success', trans('model-names.updated', ['name' => $modelName->name]));
+            ->route('model-names.edit', $modelName->id)
+            ->with('notice', trans('model-names.notices.updated', ['name' => $modelName->name]));
     }
 
-    /**
-     * Duplicates the specified resource.
-     *
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
     public function duplicate(ModelName $modelName)
     {
         $modelName->name = $modelName->name . '-' . str_random(4);
@@ -119,47 +72,17 @@ INDEXCOLUMNS
             ->with('success', trans('model-names.created', ['name' => $modelName->name]));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(ModelName $modelName)
     {
         ModelNamesRepository::delete($modelName);
         return redirect()
-            ->action('ModelNamesController@index')
-            ->with('success', trans('model-names.deleted', ['name' => $modelName->name]));
+            ->route('model-names.index')
+            ->with('notice', trans('model-names.notices.deleted', ['name' => $modelName->name]));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
-    public function delete(ModelName $modelName)
+    public function logs(ModelName $modelName, ModelNameLogsDataTable $table)
     {
-        return $this->destroy($modelName);
-    }
-
-    /**
-     * Displays the revisions of the specified resource.
-     *
-     * @param  ModelName  $modelName
-     * @return \Illuminate\Http\Response
-     */
-    public function revisions(ModelName $modelName)
-    {
-        return view()->make('model-names.revisions', compact('modelName'));
-    }
-
-    public function __construct()
-    {
-        $this->middleware('title');
-        $this->middleware('menu');
-        $this->middleware('policy');
-        $this->middleware('validate');
+        $table->setActionable($modelName);
+        return $table->render('model-names.logs', compact('modelName'));
     }
 }

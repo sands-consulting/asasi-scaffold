@@ -56,6 +56,9 @@ class ScaffoldServiceProvider extends ServiceProvider
         app()->bind('scaffold.modelfkmethods', function(){
             return new Maker\Fields\ModelFkMethods();
         });
+        app()->bind('scaffold.request', function(){
+            return new Maker\Fields\Request();
+        });
         app()->bind('scaffold.validation', function(){
             return new Maker\Fields\Validation();
         });

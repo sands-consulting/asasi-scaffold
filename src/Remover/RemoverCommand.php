@@ -19,7 +19,7 @@ class RemoverCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Erases a Laravel Base Scaffold';
+    protected $description = 'Erases a Sands Asasi Scaffold';
 
     protected function detectSingularTableName()
     {

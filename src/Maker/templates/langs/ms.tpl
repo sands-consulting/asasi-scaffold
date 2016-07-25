@@ -1,25 +1,39 @@
 <?php
 
 return [
-    'model_names' => 'Model Names',
-    'create_new_model_name' => 'Cipta Model Name Baru',
-    'create' => 'Cipta',
-    'edit' => 'Sunting',
-    'show' => 'Papar',
-    'revisions' => 'Pindaan',
-    'duplicate' => 'Gandakan',
-    'delete' => 'Padam',
-    'submit' => 'Hantar',
-    'list_all' => 'Senarai Semua',
-    'update_model_name' => 'Sunting Model Name: :name',
-    'view_revisions' => 'Lihat Pindaan Model Name: :name',
-    'created_this' => 'Model Name ini dicipta',
-    'changed_from_to' => 'Tukar ":field" dari ":from" ke ":to"',
-    'view_model_name' => 'Lihat Model Name: :name',
-    'created' => 'Model Name :name dicipta',
-    'updated' => 'Model Name :name diubah',
-    'deleted' => 'Model Name :name dipadam',
+    'title' => 'Model Names',
+
+    'attributes' => [
 LANGENFIELDS
-    'created_at' => 'Dicipta Pada',
-    'updated_at' => 'Perubahan Terakhir Pada',
+        'created_at' => 'Dicipta Pada',
+        'updated_at' => 'Tarikh Akhir Kemaskini',
+    ],
+
+    'buttons' => [
+        'create' => 'Cipta Model Name Baharu',
+        'edit' => 'Kemaskini Model Name',
+        'all' => 'Senarai Model Names',
+    ],
+
+    'notices' => [
+        'created' => 'Model Name :name dicipta',
+        'updated' => 'Model Name :name dikemaskini',
+        'deleted' => 'Model Name :name dipadam',
+    ],
+    
+    'views' => [
+        'index' => [
+        ],
+        'show' => [
+        ],
+        'create' => [
+            'title' => 'Model Name Baharu',
+        ],
+        'edit' => [
+            'title' => 'Kemaskini'
+        ],
+        'revisions' => [
+
+        ],
+    ]
 ];

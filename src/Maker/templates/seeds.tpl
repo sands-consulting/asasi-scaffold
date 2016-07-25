@@ -30,13 +30,13 @@ class ModelNameSeeder extends Seeder
         $permissionGroup->permissions()->saveMany(array_map(function($permissionData){
             return new Permission($permissionData);
         }, [
-            ['name' => 'ModelName:List', 'display_name' => 'List Model Name'],
-            ['name' => 'ModelName:Show', 'display_name' => 'View Model Name Details'],
-            ['name' => 'ModelName:Create', 'display_name' => 'Create New Model Name'],
-            ['name' => 'ModelName:Update', 'display_name' => 'Update Existing Model Name'],
-            ['name' => 'ModelName:Duplicate', 'display_name' => 'Duplicate Existing Model Name'],
-            ['name' => 'ModelName:Revisions', 'display_name' => 'View Revisions For Model Name'],
-            ['name' => 'ModelName:Delete', 'display_name' => 'Delete Existing Model Name'],
+            ['name' => 'model-name:index', 'display_name' => 'List all model name'],
+            ['name' => 'model-name:show', 'display_name' => 'View model name details'],
+            ['name' => 'model-name:create', 'display_name' => 'Create new model name'],
+            ['name' => 'model-name:update', 'display_name' => 'Update existing model name'],
+            ['name' => 'model-name:duplicate', 'display_name' => 'Duplicate existing model name'],
+            ['name' => 'model-name:revisions', 'display_name' => 'View revisions for model name'],
+            ['name' => 'model-name:delete', 'display_name' => 'Delete existing model name'],
         ]));
     }
 }

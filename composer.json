@@ -1,6 +1,6 @@
 {
     "name": "sands/asasi-scaffold",
-    "description": "Scaffold Generator",
+    "description": "Scaffold Generator For Asasi",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -22,7 +22,8 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "illuminate/support": "~5.0"
+        "illuminate/support": "~5.0",
+        "yetanotherape/diff-match-patch": "^1.0"
     },
     "minimum-stability": "dev"
 }

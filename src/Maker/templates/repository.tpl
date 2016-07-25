@@ -3,6 +3,6 @@
 namespace App\Repositories;
 
 use App\ModelName;
-use App\Exceptions\RepositoryException;
+use Sands\Asasi\Foundation\Repository\Exceptions\RepositoryException;
 
 class ModelNamesRepository extends BaseRepository {}
