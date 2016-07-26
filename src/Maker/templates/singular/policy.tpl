@@ -11,11 +11,6 @@ class ModelNamesPolicy extends BasePolicy
         return $this->user->hasPermission('model-name:list');
     }
 
-    public function data()
-    {
-        return $this->index();
-    }
-
     public function show(ModelName $modelName)
     {
         return $this->user->hasPermission('model-name:show');

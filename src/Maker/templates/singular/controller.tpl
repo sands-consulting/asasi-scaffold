@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Repositories\ModelNamesRepository;
-use App\Http\Controllers\Controller;
-use yajra\Datatables\Html\Builder;
-use App\DataTables\ModelNamesDataTable;
 use App\ModelName;
+use App\DataTables\ModelNamesDataTable;
+use App\DataTables\RevisionsDataTable;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ModelNameRequest;
+use App\Repositories\ModelNamesRepository;
+use Illuminate\Http\Request;
 
 class ModelNamesController extends Controller
 {
