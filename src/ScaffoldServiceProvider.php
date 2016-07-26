@@ -77,19 +77,28 @@ class ScaffoldServiceProvider extends ServiceProvider
         app()->bind('fkmigrator', function(){
             return new FKMigrator\FKMigrator();
         });
+
         $this->registerCommand();
     }
 
     public function registerCommand()
     {
-        app()->singleton('scaffoldcmd', function(){
+        // Fixme: Assign register singleton command for generator.
+        // app()->singleton('scaffold.generator', function(){
+        //     return Maker\ScaffoldCommand::class;
+        // });
+        app()->singleton('scaffold.maker', function(){
             return new Maker\MakerCommand;
         });
-        $this->commands('scaffoldcmd');
-
-        app()->singleton('scaffoldremovercmd', function(){
+        app()->singleton('scaffold.remover', function(){
             return new Remover\RemoverCommand;
         });
-        $this->commands('scaffoldremovercmd');
+
+        $this->commands([
+            // 'scaffold.generator',
+            Maker\ScaffoldCommand::class,
+            'scaffold.maker',
+            'scaffold.remover'
+        ]);
     }
 }

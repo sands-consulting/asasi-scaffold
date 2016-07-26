@@ -212,25 +212,26 @@ class Scaffold
         $this->tableName = $tableName;
         $this->fs = app('files');
         $this->makeBaseParams();
-        app('fkmigrator')->remove($this->tableName);
+        // app('fkmigrator')->remove($this->tableName);
         // run down migrations
-        foreach ($this->fs->files(base_path('database/migrations')) as $file) {
-            if (stristr($file, $this->params['ModelNames'] . 'Migration.php')) {
-                $fileName = substr(basename($file), 0, -4);
-                $record = app('db')
-                    ->table('migrations')
-                    ->where('migration', $fileName)
-                    ->first();
-                if ($record) {
-                    app('db')
-                        ->table('migrations')
-                        ->where('migration', $fileName)
-                        ->take(1)
-                        ->delete();
-                }
-                app($this->params['ModelNames'] . 'Migration')->down();
-            }
-        }
+        // Todo: check if the migration done by the user before running code below.
+        // foreach ($this->fs->files(base_path('database/migrations')) as $file) {
+        //     if (stristr($file, $this->params['ModelNames'] . 'Migration.php')) {
+        //         $fileName = substr(basename($file), 0, -4);
+        //         $record = app('db')
+        //             ->table('migrations')
+        //             ->where('migration', $fileName)
+        //             ->first();
+        //         if ($record) {
+        //             app('db')
+        //                 ->table('migrations')
+        //                 ->where('migration', $fileName)
+        //                 ->take(1)
+        //                 ->delete();
+        //         }
+        //         app($this->params['ModelNames'] . 'Migration')->down();
+        //     }
+        // }
         $this->remove();
         $this->dumpAutoload();
     }
