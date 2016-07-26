@@ -1,14 +1,14 @@
 <?php
 
-use App\Repositories\PermissionGroupsRepository;
-use App\Repositories\PermissionsRepository;
-use App\Repositories\ModelNamesRepository;
+use App\Banner;
+use App\News;
+use App\NewsCategory;
+use App\Repositories\BannerRepository;
+use App\Repositories\NewsRepository;
+use App\Repositories\NewsCategoryRepository;
 use Illuminate\Database\Seeder;
-use App\PermissionGroup;
-use App\Permission;
-use App\ModelName;
 
-class ModelNameSeeder extends Seeder
+class NewsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,26 +17,25 @@ class ModelNameSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('model_names')->truncate();
+        DB::table('model-names')->truncate();
 
-        $modelNames = [];
+        $permissions = [
+            ['model-names:index',                  'List all model names'],
+            ['model-names:show',                   'View a model names'],
+            ['model-names:create',                 'Create new model names'],
+            ['model-names:update',                 'Update existing model names'],
+            ['model-names:delete',                 'Delete exisiting model names'],
+        ];
 
-        foreach ($modelNames as $modelNameData) {
-            ModelNamesRepository::create(new ModelName, $modelNameData);
+        foreach ($permissions as $permissionData) {
+            PermissionsRepository::create(new Permission(), [
+                'name'          => $permissionData[0],
+                'description'   => $permissionData[1],
+            ]);
         }
 
-        $permissionGroup = PermissionGroupsRepository::create(new PermissionGroup, ['name' => 'Model Names']);
-
-        $permissionGroup->permissions()->saveMany(array_map(function($permissionData){
-            return new Permission($permissionData);
-        }, [
-            ['name' => 'ModelName:List', 'display_name' => 'List Model Name'],
-            ['name' => 'ModelName:Show', 'display_name' => 'View Model Name Details'],
-            ['name' => 'ModelName:Create', 'display_name' => 'Create New Model Name'],
-            ['name' => 'ModelName:Update', 'display_name' => 'Update Existing Model Name'],
-            ['name' => 'ModelName:Duplicate', 'display_name' => 'Duplicate Existing Model Name'],
-            ['name' => 'ModelName:Revisions', 'display_name' => 'View Revisions For Model Name'],
-            ['name' => 'ModelName:Delete', 'display_name' => 'Delete Existing Model Name'],
-        ]));
+        ModelNamesRepository::create([
+            // Your master data
+        ]);
     }
 }

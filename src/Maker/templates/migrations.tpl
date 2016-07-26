@@ -29,6 +29,4 @@ MIGRATIONFIELDS
     {
         Schema::dropIfExists('model_names');
     }
-
-    // Foreign keys migrations are done via 9999_12_31_235959_FKMigrations.php
 }

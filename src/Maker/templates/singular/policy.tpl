@@ -3,28 +3,22 @@
 namespace App\Policies;
 
 use App\ModelName;
-use App\Libraries\Policy\BasePolicy;
 
 class ModelNamesPolicy extends BasePolicy
 {
     public function index()
     {
-        return $this->user->ability(['Admin'], ['ModelName:List']);
-    }
-
-    public function data()
-    {
-        return $this->index();
+        return $this->user->hasPermission('model-name:list');
     }
 
     public function show(ModelName $modelName)
     {
-        return $this->user->ability(['Admin'], ['ModelName:Show']);
+        return $this->user->hasPermission('model-name:show');
     }
 
     public function create()
     {
-        return $this->user->ability(['Admin'], ['ModelName:Create']);
+        return $this->user->hasPermission('model-name:create');
     }
 
     public function store()
@@ -34,7 +28,7 @@ class ModelNamesPolicy extends BasePolicy
 
     public function edit(ModelName $modelName)
     {
-        return $this->user->ability(['Admin'], ['ModelName:Update']);
+        return $this->user->hasPermission('model-name:update');
     }
 
     public function update(ModelName $modelName)
@@ -44,21 +38,16 @@ class ModelNamesPolicy extends BasePolicy
 
     public function duplicate(ModelName $modelName)
     {
-        return $this->user->ability(['Admin'], ['ModelName:Duplicate']);
+        return $this->user->hasPermission('model-name:duplicate');
     }
 
     public function revisions(ModelName $modelName)
     {
-        return $this->user->ability(['Admin'], ['ModelName:Revisions']);
+        return $this->user->hasPermission('model-name:revisions');
     }
 
     public function destroy(ModelName $modelName)
     {
-        return $this->user->ability(['Admin'], ['ModelName:Delete']);
-    }
-
-    public function delete(ModelName $modelName)
-    {
-        return $this->destroy($modelName);
+        return $this->user->hasPermission('model-name:delete');
     }
 }
